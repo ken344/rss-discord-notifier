@@ -71,9 +71,9 @@ func loadConfigFile(filePath string) (*models.Config, error) {
 	}
 
 	// 各フィードのWebhook URLの環境変数を展開
-	for _, feed := range config.Feeds {
-		if feed.WebhookURL != "" {
-			feed.WebhookURL = ExpandEnvVars(feed.WebhookURL)
+	for i := range config.Feeds {
+		if config.Feeds[i].WebhookURL != "" {
+			config.Feeds[i].WebhookURL = ExpandEnvVars(config.Feeds[i].WebhookURL)
 		}
 	}
 
