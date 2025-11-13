@@ -101,7 +101,27 @@ jobs:
           STATE_FILE_PATH: './state/state.json'
         run: |
           echo "🚀 RSS Discord Notifierを起動..."
-          go run cmd/notifier/main.go
+          echo "📋 環境変数チェック:"
+          echo "  CONFIG_FILE_PATH: $CONFIG_FILE_PATH"
+          echo "  STATE_FILE_PATH: $STATE_FILE_PATH"
+          echo "  LOG_LEVEL: $LOG_LEVEL"
+          echo "  LOG_FORMAT: $LOG_FORMAT"
+          
+          echo "📁 設定ファイル確認:"
+          if [ -f "$CONFIG_FILE_PATH" ]; then
+            echo "  ✅ $CONFIG_FILE_PATH が存在します"
+            echo "  ファイルサイズ: $(wc -c < "$CONFIG_FILE_PATH") bytes"
+          else
+            echo "  ❌ $CONFIG_FILE_PATH が存在しません"
+            exit 1
+          fi
+          
+          echo "🔄 プログラム実行..."
+          go run cmd/notifier/main.go 2>&1 || {
+            EXIT_CODE=$?
+            echo "❌ エラーが発生しました (exit code: $EXIT_CODE)"
+            exit $EXIT_CODE
+          }
           echo "✅ 実行完了"
       
       # 8. 実行結果のサマリーを表示
