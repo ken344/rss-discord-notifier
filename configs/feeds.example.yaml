@@ -21,35 +21,41 @@ feeds:
     url: "https://go.dev/blog/feed.atom"
     category: "Tech"
     enabled: true
+    # webhook_url: "${DISCORD_WEBHOOK_URL_TECH}"  # Tech専用チャンネル（オプション）
 
   # GitHub公式ブログ
   - name: "GitHub Blog"
     url: "https://github.blog/feed/"
     category: "Tech"
     enabled: true
+    # webhook_url: "${DISCORD_WEBHOOK_URL_TECH}"  # Tech専用チャンネル（オプション）
 
   # Hacker News
   - name: "Hacker News"
     url: "https://news.ycombinator.com/rss"
     category: "Tech"
     enabled: false  # 必要に応じて有効化
+    # webhook_url: "${DISCORD_WEBHOOK_URL_TECH}"  # Tech専用チャンネル（オプション）
 
   # サンプル（自分のフィードに置き換えてください）
   - name: "My Favorite Blog"
     url: "https://example.com/feed.xml"
     category: "Blog"
     enabled: false
+    # webhook_url: "${DISCORD_WEBHOOK_URL_BLOG}"  # Blog専用チャンネル（オプション）
 
   # 複数のカテゴリ例
   - name: "Tech News Site"
     url: "https://example.com/tech/feed"
     category: "News"
     enabled: false
+    # webhook_url: "${DISCORD_WEBHOOK_URL_NEWS}"  # News専用チャンネル（オプション）
 
   - name: "Personal Blog"
     url: "https://example.com/blog/rss"
     category: "Other"
     enabled: false
+    # webhook_urlなし → デフォルトのDISCORD_WEBHOOK_URLを使用
 
 # カテゴリ説明:
 # - Tech:  テクノロジー関連（色: Discord Blurple）
@@ -65,12 +71,22 @@ feeds:
 #
 # 3. enabled を true に設定して有効化
 #
-# 4. 変更をコミットしてプッシュ
+# 4. （オプション）フィードごとに異なるDiscordチャンネルに通知する場合：
+#    a. 各チャンネルのWebhook URLを作成
+#    b. GitHub Secretsに環境変数を登録:
+#       - DISCORD_WEBHOOK_URL_TECH (Tech専用チャンネル)
+#       - DISCORD_WEBHOOK_URL_NEWS (News専用チャンネル)
+#       - DISCORD_WEBHOOK_URL_BLOG (Blog専用チャンネル)
+#    c. feeds.yamlで webhook_url を指定:
+#       webhook_url: "${DISCORD_WEBHOOK_URL_TECH}"
+#    d. webhook_url を指定しない場合は、デフォルトの DISCORD_WEBHOOK_URL を使用
+#
+# 5. 変更をコミットしてプッシュ
 #    git add configs/feeds.yaml
 #    git commit -m "Add RSS feeds"
 #    git push
 #
-# 5. 次回のGitHub Actions実行時から反映されます
+# 6. 次回のGitHub Actions実行時から反映されます
 
 # ヒント:
 # - RSSフィードURLの見つけ方:

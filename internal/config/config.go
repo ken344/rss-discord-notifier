@@ -70,6 +70,13 @@ func loadConfigFile(filePath string) (*models.Config, error) {
 		return nil, fmt.Errorf("invalid config: %w", err)
 	}
 
+	// 各フィードのWebhook URLの環境変数を展開
+	for _, feed := range config.Feeds {
+		if feed.WebhookURL != "" {
+			feed.WebhookURL = ExpandEnvVars(feed.WebhookURL)
+		}
+	}
+
 	return &config, nil
 }
 

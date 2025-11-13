@@ -105,23 +105,51 @@ func run() error {
 	if len(newArticles) > 0 {
 		logger.Info("Discordに通知を送信しています...", "count", len(newArticles))
 
-		// Discord通知器を初期化
+		// レート制限設定
 		rateLimit := time.Duration(appConfig.Config.Notification.RateLimitMs) * time.Millisecond
-		notifier := discord.NewNotifier(appConfig.DiscordWebhookURL, rateLimit)
 
 		// 記事を通知（古い順に）
 		sortedArticles := sortArticlesByPublishedAt(newArticles)
-		if err := notifier.SendArticles(ctx, sortedArticles); err != nil {
-			logger.Error("一部の記事の通知に失敗しました", "error", err)
-			// エラーがあっても処理を継続（成功した記事は状態に記録する）
-		}
+		
+		// 記事ごとに適切なWebhook URLで通知
+		successCount := 0
+		for i, article := range sortedArticles {
+			// Webhook URLの決定（記事設定 > デフォルト）
+			webhookURL := article.WebhookURL
+			if webhookURL == "" {
+				webhookURL = appConfig.DiscordWebhookURL
+			}
 
-		// 8. 通知済み記事を状態に記録
-		for _, article := range sortedArticles {
+			// Notifierを作成（Webhook URLごとに作成）
+			notifier := discord.NewNotifier(webhookURL, rateLimit)
+
+			// 記事を送信
+			if err := notifier.SendArticle(ctx, article); err != nil {
+				logger.Error("記事の通知に失敗",
+					"title", article.Title,
+					"feed", article.FeedName,
+					"error", err)
+				continue
+			}
+
+			// 8. 通知済み記事を状態に記録
 			stateManager.MarkAsNotified(article)
+			successCount++
+
+			// レート制限対策（最後の記事以外）
+			if i < len(sortedArticles)-1 {
+				select {
+				case <-time.After(rateLimit):
+				case <-ctx.Done():
+					return ctx.Err()
+				}
+			}
 		}
 
-		logger.Info("通知が完了しました", "notified_count", len(sortedArticles))
+		logger.Info("通知が完了しました",
+			"total", len(sortedArticles),
+			"success", successCount,
+			"failed", len(sortedArticles)-successCount)
 	} else {
 		logger.Info("通知する新規記事がありません")
 	}

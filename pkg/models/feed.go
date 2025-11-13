@@ -14,6 +14,11 @@ type FeedConfig struct {
 
 	// Enabled はこのフィードが有効かどうか
 	Enabled bool `yaml:"enabled"`
+
+	// WebhookURL はこのフィード専用のDiscord Webhook URL（オプション）
+	// 環境変数を参照する場合は ${ENV_VAR_NAME} の形式で指定
+	// 指定がない場合はデフォルトのWebhook URLが使用される
+	WebhookURL string `yaml:"webhook_url,omitempty"`
 }
 
 // IsValid は、フィード設定が有効かチェックする

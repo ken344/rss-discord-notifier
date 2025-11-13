@@ -36,6 +36,10 @@ type Article struct {
 
 	// Category はフィードのカテゴリ（Tech, News, Blog, Otherなど）
 	Category string
+
+	// WebhookURL はこの記事を通知する際に使用するDiscord Webhook URL
+	// フィード設定から引き継がれる
+	WebhookURL string
 }
 
 // IsValid は、記事が有効なデータを持っているかチェックする

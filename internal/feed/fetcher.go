@@ -200,6 +200,7 @@ func (f *Fetcher) convertToArticle(item *gofeed.Item, feedConfig *models.FeedCon
 		FeedName:    feedConfig.Name,
 		FeedURL:     feedConfig.URL,
 		Category:    feedConfig.Category,
+		WebhookURL:  feedConfig.WebhookURL, // フィード設定のWebhook URLを引き継ぐ
 	}
 }
 
