@@ -138,3 +138,205 @@ rss-discord-notifier/
 - タイムアウト: フィード取得30秒
 - エラーハンドリング: 個別フィードのエラーで全体を止めない設計
 
+---
+
+## 🔄 開発ワークフロー
+
+### コミット前のチェックリスト
+
+**必須: 以下をすべて実行してからコミット・プッシュすること！**
+
+#### 1. コードフォーマット
+
+```bash
+# すべてのGoファイルをフォーマット
+gofmt -s -w .
+
+# または Makefileを使用
+make fmt
+
+# フォーマット確認（何も出力されなければOK）
+gofmt -s -l .
+```
+
+#### 2. Linter実行
+
+```bash
+# golangci-lintを実行
+golangci-lint run ./...
+
+# または Makefileを使用
+make lint
+```
+
+#### 3. 静的解析
+
+```bash
+# go vetを実行
+go vet ./...
+
+# または Makefileを使用
+make vet
+```
+
+#### 4. テスト実行
+
+```bash
+# すべてのテストを実行
+go test ./...
+
+# または Makefileを使用
+make test
+
+# カバレッジ付きで実行
+make test-coverage
+```
+
+#### 5. ビルド確認
+
+```bash
+# ビルドが成功するか確認
+go build -o bin/notifier cmd/notifier/main.go
+
+# または Makefileを使用
+make build
+```
+
+#### 6. 依存関係の整理
+
+```bash
+# go.modを整理
+go mod tidy
+
+# または Makefileを使用
+make tidy
+```
+
+### 推奨: すべてをまとめて実行
+
+```bash
+# すべてのチェックとビルドを一度に実行
+make all
+```
+
+これで以下が実行されます：
+1. ✅ clean（古いビルド成果物を削除）
+2. ✅ lint（Linter実行）
+3. ✅ test（テスト実行）
+4. ✅ build（ビルド）
+
+### Git操作の推奨フロー
+
+```bash
+# 1. 変更の確認
+git status
+
+# 2. すべてのチェックを実行（重要！）
+make all
+
+# 3. フォーマットを確認
+gofmt -s -l .
+
+# 4. すべて成功したら、変更をステージング
+git add .
+
+# 5. コミット（meaningful なメッセージで）
+git commit -m "feat: Add awesome feature"
+
+# 6. プッシュ
+git push origin main
+```
+
+### CI/CDで実行される内容
+
+GitHub Actionsで自動的にチェックされる項目：
+
+**test.yml（すべてのPR・Push）:**
+- ✅ `go mod tidy` の整合性チェック
+- ✅ `gofmt` でフォーマットチェック
+- ✅ `go vet` で静的解析
+- ✅ `go test` でテスト実行（race detector + coverage）
+- ✅ `go build` でビルド確認
+- ✅ `golangci-lint` で包括的なLint
+
+**notify.yml（定期実行・手動実行）:**
+- ✅ RSS取得と Discord通知の実行
+
+### トラブルシューティング
+
+#### CIでフォーマットエラーが出た場合
+
+```bash
+# エラー: 以下のファイルがフォーマットされていません
+gofmt -s -w .
+git add .
+git commit -m "style: Format code with gofmt"
+git push origin main
+```
+
+#### Lintエラーが出た場合
+
+```bash
+# エラー内容を確認
+golangci-lint run ./...
+
+# 修正してコミット
+git add .
+git commit -m "fix: Fix linter issues"
+git push origin main
+```
+
+### 便利なMakefileコマンド一覧
+
+| コマンド | 説明 |
+|---------|------|
+| `make help` | 利用可能なコマンドを表示 |
+| `make all` | すべてのチェックとビルド |
+| `make build` | バイナリをビルド |
+| `make test` | テストを実行 |
+| `make test-coverage` | カバレッジ付きテスト |
+| `make lint` | Linterを実行 |
+| `make fmt` | コードフォーマット |
+| `make vet` | go vetを実行 |
+| `make tidy` | go mod tidyを実行 |
+| `make clean` | ビルド成果物を削除 |
+| `make check` | フォーマット+vet+lint+test |
+| `make deps` | 依存関係を表示 |
+| `make deps-update` | 依存関係を最新化 |
+
+---
+
+## 📊 プロジェクト統計（2025-11-13時点）
+
+### 実装済み機能
+
+- ✅ RSS フィード取得（並行処理）
+- ✅ Discord Webhook 通知（Embeds形式）
+- ✅ サムネイル画像表示
+- ✅ 状態管理（通知済み記事の追跡）
+- ✅ フィードごとのチャンネル指定（オプション）
+- ✅ カテゴリ別の色分け
+- ✅ 初回実行時の記事数制限
+- ✅ エラーハンドリングとリトライ
+- ✅ ログ出力（JSON/Text形式）
+- ✅ GitHub Actions統合（Cron実行）
+- ✅ CI/CD（テスト・Lint・ビルド）
+- ✅ Dependabot（自動依存関係更新）
+
+### コード品質
+
+- **テストカバレッジ**: 55%
+- **Goバージョン**: 1.21
+- **Linter**: golangci-lint（10種類以上のLinter有効）
+- **コード行数**: 約6,000行（ドキュメント含む）
+- **パッケージ数**: 7個（models, config, feed, discord, state, logger, main）
+
+### ドキュメント
+
+- 📖 README.md（完全版）
+- 📖 要件定義書
+- 📖 アーキテクチャ設計書
+- 📖 ADR（3件）
+- 📖 Dependabotガイド
+- 📖 AGENTS.md（開発記録）
+
