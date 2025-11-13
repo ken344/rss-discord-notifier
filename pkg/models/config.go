@@ -27,13 +27,13 @@ type NotificationConfig struct {
 // GetEnabledFeeds は、有効なフィードのみを返す
 func (c *Config) GetEnabledFeeds() []*FeedConfig {
 	enabledFeeds := make([]*FeedConfig, 0)
-	
+
 	for _, feed := range c.Feeds {
 		if feed.Enabled {
 			enabledFeeds = append(enabledFeeds, feed)
 		}
 	}
-	
+
 	return enabledFeeds
 }
 
@@ -63,4 +63,3 @@ func (c *Config) Validate() error {
 
 	return nil
 }
-

@@ -274,4 +274,3 @@ func TestReset(t *testing.T) {
 		t.Errorf("should be first run after reset (feeds count: %d)", feedsCount)
 	}
 }
-

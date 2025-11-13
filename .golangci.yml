@@ -1,0 +1,100 @@
+# golangci-lint configuration
+# https://golangci-lint.run/usage/configuration/
+
+run:
+  # タイムアウト設定
+  timeout: 5m
+  
+  # テストファイルも対象にする
+  tests: true
+  
+  # ビルドタグ
+  build-tags:
+    - integration
+
+# 有効にするLinter
+linters:
+  enable:
+    - gofmt         # コードフォーマット
+    - goimports     # import文の整理
+    - govet         # 静的解析
+    - errcheck      # エラーチェック
+    - staticcheck   # 静的解析
+    - unused        # 未使用コード
+    - gosimple      # コードの簡素化
+    - ineffassign   # 無駄な代入
+    - misspell      # スペルミス
+    - revive        # 汎用Linter
+  
+  # 無効にするLinter（必要に応じて調整）
+  disable:
+    - typecheck     # ビルドエラーと重複するため
+
+# Linterの設定
+linters-settings:
+  # gofmt
+  gofmt:
+    simplify: true
+  
+  # revive（golintの後継）
+  revive:
+    rules:
+      - name: blank-imports
+      - name: context-as-argument
+      - name: dot-imports
+      - name: error-return
+      - name: error-strings
+      - name: error-naming
+      - name: exported
+      - name: if-return
+      - name: increment-decrement
+      - name: var-naming
+      - name: package-comments
+      - name: range
+      - name: receiver-naming
+      - name: time-naming
+      - name: unexported-return
+      - name: indent-error-flow
+      - name: errorf
+  
+  # errcheck
+  errcheck:
+    # defer文のエラーもチェック
+    check-type-assertions: true
+    check-blank: true
+  
+  # misspell
+  misspell:
+    locale: US
+
+# 問題の設定
+issues:
+  # 最大表示数（0=無制限）
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  
+  # 除外するパス
+  exclude-rules:
+    # テストファイルでは一部のLinterを無効化
+    - path: _test\.go
+      linters:
+        - errcheck
+        - gosec
+    
+    # main.goでのos.Exit()を許可
+    - path: cmd/notifier/main\.go
+      linters:
+        - revive
+      text: "deep-exit"
+
+# 出力設定
+output:
+  # カラー出力
+  color: always
+  
+  # フォーマット
+  format: colored-line-number
+  
+  # 結果の並び替え
+  sort-results: true
+

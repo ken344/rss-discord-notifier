@@ -264,4 +264,3 @@ func (n *Notifier) SetMaxRetries(count int) {
 func (n *Notifier) SetRetryDelay(duration time.Duration) {
 	n.retryDelay = duration
 }
-

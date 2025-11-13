@@ -304,4 +304,3 @@ func TestSetters(t *testing.T) {
 		t.Errorf("retryDelay = %v, want %v", notifier.retryDelay, newRetryDelay)
 	}
 }
-

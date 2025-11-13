@@ -37,7 +37,7 @@ func TestInit(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// パニックが起きないことを確認
 			Init(tt.config)
-			
+
 			if Logger == nil {
 				t.Error("Logger should not be nil after Init()")
 			}
@@ -179,7 +179,7 @@ func TestParseFormat(t *testing.T) {
 // TestDebugLevel は、DEBUGレベルが正しくフィルタリングされるかテストする
 func TestDebugLevel(t *testing.T) {
 	buf := &bytes.Buffer{}
-	
+
 	// INFOレベルで初期化（DEBUGは出力されないはず）
 	Init(&Config{
 		Level:  LevelInfo,
@@ -202,4 +202,3 @@ func TestDebugLevel(t *testing.T) {
 		t.Error("INFO message should appear when level is INFO")
 	}
 }
-

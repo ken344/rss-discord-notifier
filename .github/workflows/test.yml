@@ -1,0 +1,148 @@
+name: Go Tests
+
+# トリガー設定
+on:
+  # mainブランチへのPush時
+  push:
+    branches:
+      - main
+  
+  # Pull Request時（任意のブランチから）
+  pull_request:
+    branches:
+      - main
+  
+  # 手動実行を許可
+  workflow_dispatch:
+    inputs:
+      log_level:
+        description: 'ログレベル'
+        required: false
+        default: 'INFO'
+        type: choice
+        options:
+          - DEBUG
+          - INFO
+          - WARN
+          - ERROR
+
+# 環境変数
+env:
+  GO_VERSION: '1.21'
+
+jobs:
+  test:
+    name: テスト実行
+    runs-on: ubuntu-latest
+    
+    # タイムアウト設定（10分）
+    timeout-minutes: 10
+    
+    steps:
+      # 1. リポジトリをチェックアウト
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+      
+      # 2. Go環境のセットアップ
+      - name: Go環境をセットアップ
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+      
+      # 3. 依存関係のダウンロード
+      - name: Go依存関係をダウンロード
+        run: go mod download
+      
+      # 4. go mod tidyで依存関係をチェック
+      - name: 依存関係の整合性をチェック
+        run: |
+          go mod tidy
+          git diff --exit-code go.mod go.sum
+      
+      # 5. gofmtでフォーマットをチェック
+      - name: コードフォーマットをチェック
+        run: |
+          if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then
+            echo "以下のファイルがフォーマットされていません:"
+            gofmt -s -l .
+            exit 1
+          fi
+      
+      # 6. go vetで静的解析
+      - name: 静的解析を実行 (go vet)
+        run: go vet ./...
+      
+      # 7. テストを実行（カバレッジ付き）
+      - name: テストを実行
+        run: go test -v -race -coverprofile=coverage.out -covermode=atomic ./...
+      
+      # 8. カバレッジを表示
+      - name: カバレッジを表示
+        run: go tool cover -func=coverage.out
+      
+      # 9. カバレッジレポートをアップロード（オプション）
+      - name: カバレッジレポートをアップロード
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage.out
+          retention-days: 30
+      
+      # 10. ビルドテスト（実行ファイルが作成できるか確認）
+      - name: ビルドテスト
+        run: go build -v -o bin/notifier cmd/notifier/main.go
+      
+      # 11. 実行ファイルの存在確認
+      - name: 実行ファイルの確認
+        run: |
+          if [ ! -f bin/notifier ]; then
+            echo "実行ファイルが作成されませんでした"
+            exit 1
+          fi
+          echo "✓ 実行ファイルが正常に作成されました"
+          ls -lh bin/notifier
+      
+      # 12. テスト結果サマリー
+      - name: テスト結果サマリー
+        if: always()
+        run: |
+          echo "## 🧪 テスト結果" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Go Version**: ${{ env.GO_VERSION }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **OS**: Ubuntu Latest" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -f coverage.out ]; then
+            COVERAGE=$(go tool cover -func=coverage.out | grep total | awk '{print $3}')
+            echo "- **カバレッジ**: $COVERAGE" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  # Linterジョブ（golangci-lintを使用、オプション）
+  lint:
+    name: Lint実行
+    runs-on: ubuntu-latest
+    
+    timeout-minutes: 10
+    
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+      
+      - name: Go環境をセットアップ
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+      
+      # golangci-lintを使用（より包括的なLint）
+      - name: golangci-lintを実行
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: latest
+          # .golangci.ymlの設定を使用
+          args: --config=.golangci.yml
+

@@ -31,8 +31,8 @@ func NewManager(filePath string) *Manager {
 	return &Manager{
 		filePath:           filePath,
 		state:              models.NewState(),
-		maxArticlesPerFeed: 100,  // フィードごとに最新100件を保持
-		cleanupDays:        30,   // 30日より古い記事は削除
+		maxArticlesPerFeed: 100, // フィードごとに最新100件を保持
+		cleanupDays:        30,  // 30日より古い記事は削除
 	}
 }
 
@@ -148,7 +148,7 @@ func (m *Manager) cleanup() {
 		// 古い記事を削除
 		beforeCount := len(feedState.NotifiedArticles)
 		feedState.CleanupOldArticles(m.cleanupDays)
-		
+
 		// 記事数を制限
 		feedState.LimitArticleCount(m.maxArticlesPerFeed)
 		afterCount := len(feedState.NotifiedArticles)
@@ -196,4 +196,3 @@ func (m *Manager) SetCleanupDays(days int) {
 		m.cleanupDays = days
 	}
 }
-

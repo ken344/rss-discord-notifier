@@ -26,4 +26,3 @@ func (f *FeedConfig) IsValid() bool {
 	// 最低限、名前とURLが必要
 	return f.Name != "" && f.URL != ""
 }
-

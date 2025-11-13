@@ -38,4 +38,3 @@ func ExpandEnvVars(s string) string {
 
 	return result
 }
-

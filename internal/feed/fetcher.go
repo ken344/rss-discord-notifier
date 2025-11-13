@@ -251,4 +251,3 @@ func (f *Fetcher) GetFeedInfo(ctx context.Context, feedURL string) (title string
 
 	return feed.Title, feed.Description, nil
 }
-

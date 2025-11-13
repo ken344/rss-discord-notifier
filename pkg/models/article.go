@@ -53,12 +53,11 @@ func (a *Article) GetShortDescription(maxLength int) string {
 	if len(a.Description) <= maxLength {
 		return a.Description
 	}
-	
+
 	// maxLengthを超える場合は切り詰めて "..." を追加
 	if maxLength > 3 {
 		return a.Description[:maxLength-3] + "..."
 	}
-	
+
 	return a.Description[:maxLength]
 }
-

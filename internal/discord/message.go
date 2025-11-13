@@ -8,15 +8,15 @@ type WebhookMessage struct {
 
 // Embed は、Discordの埋め込みメッセージ
 type Embed struct {
-	Title       string        `json:"title,omitempty"`
-	Description string        `json:"description,omitempty"`
-	URL         string        `json:"url,omitempty"`
-	Color       int           `json:"color,omitempty"`
-	Fields      []EmbedField  `json:"fields,omitempty"`
-	Author      *EmbedAuthor  `json:"author,omitempty"`
-	Footer      *EmbedFooter  `json:"footer,omitempty"`
-	Timestamp   string        `json:"timestamp,omitempty"`
-	Thumbnail   *EmbedImage   `json:"thumbnail,omitempty"`
+	Title       string       `json:"title,omitempty"`
+	Description string       `json:"description,omitempty"`
+	URL         string       `json:"url,omitempty"`
+	Color       int          `json:"color,omitempty"`
+	Fields      []EmbedField `json:"fields,omitempty"`
+	Author      *EmbedAuthor `json:"author,omitempty"`
+	Footer      *EmbedFooter `json:"footer,omitempty"`
+	Timestamp   string       `json:"timestamp,omitempty"`
+	Thumbnail   *EmbedImage  `json:"thumbnail,omitempty"`
 }
 
 // EmbedField は、Embedのフィールド
@@ -43,4 +43,3 @@ type EmbedFooter struct {
 type EmbedImage struct {
 	URL string `json:"url,omitempty"`
 }
-

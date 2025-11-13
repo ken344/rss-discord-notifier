@@ -8,10 +8,10 @@ import (
 // TestExpandEnvVars は、環境変数展開をテストする
 func TestExpandEnvVars(t *testing.T) {
 	tests := []struct {
-		name     string
-		input    string
-		envVars  map[string]string
-		want     string
+		name    string
+		input   string
+		envVars map[string]string
+		want    string
 	}{
 		{
 			name:    "環境変数なし",
@@ -123,4 +123,3 @@ func TestExpandEnvVarsPattern(t *testing.T) {
 		})
 	}
 }
-

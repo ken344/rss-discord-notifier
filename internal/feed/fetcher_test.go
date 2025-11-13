@@ -65,14 +65,14 @@ func TestConvertToArticle(t *testing.T) {
 		{
 			name: "完全な記事",
 			item: &gofeed.Item{
-				GUID:             "article-1",
-				Title:            "Test Article",
-				Link:             "https://example.com/article-1",
-				Description:      "Test Description",
-				Content:          "Test Content",
-				Author:           &gofeed.Person{Name: "Test Author"},
-				PublishedParsed:  &publishedTime,
-				UpdatedParsed:    &updatedTime,
+				GUID:            "article-1",
+				Title:           "Test Article",
+				Link:            "https://example.com/article-1",
+				Description:     "Test Description",
+				Content:         "Test Content",
+				Author:          &gofeed.Person{Name: "Test Author"},
+				PublishedParsed: &publishedTime,
+				UpdatedParsed:   &updatedTime,
 			},
 			want: &models.Article{
 				ID:          "article-1",
@@ -299,4 +299,3 @@ func TestFetchWithTimeout(t *testing.T) {
 		t.Error("Fetch() with very short timeout should return error")
 	}
 }
-

@@ -158,4 +158,3 @@ func ParseFormat(s string) Format {
 		return FormatJSON
 	}
 }
-

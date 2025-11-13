@@ -1,5 +1,8 @@
 # RSS Discord Notifier
 
+[![Go Tests](https://github.com/ken344/rss-discord-notifier/actions/workflows/test.yml/badge.svg)](https://github.com/ken344/rss-discord-notifier/actions/workflows/test.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/ken344/rss-discord-notifier)](https://goreportcard.com/report/github.com/ken344/rss-discord-notifier)
+
 RSSフィードを定期的に監視し、新しい記事をDiscordチャンネルに自動通知するGo製のツールです。GitHub Actionsで動作し、誰でも簡単にCloneして使用できます。
 
 ## ✨ 特徴

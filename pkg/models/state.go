@@ -146,4 +146,3 @@ func (fs *FeedState) LimitArticleCount(maxCount int) {
 	// （実際の実装では、NotifiedAtでソートしてから最新N件を取るのが望ましい）
 	fs.NotifiedArticles = fs.NotifiedArticles[len(fs.NotifiedArticles)-maxCount:]
 }
-

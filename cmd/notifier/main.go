@@ -110,7 +110,7 @@ func run() error {
 
 		// 記事を通知（古い順に）
 		sortedArticles := sortArticlesByPublishedAt(newArticles)
-		
+
 		// 記事ごとに適切なWebhook URLで通知
 		successCount := 0
 		for i, article := range sortedArticles {
@@ -237,4 +237,3 @@ func getEnv(key, defaultValue string) string {
 	}
 	return value
 }
-
