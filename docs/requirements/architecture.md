@@ -122,6 +122,7 @@ type FeedConfig struct {
     URL         string
     Category    string
     Enabled     bool
+    WebhookURL  string  // オプション: フィード専用のWebhook URL
 }
 
 type DiscordConfig struct {
@@ -176,6 +177,9 @@ type Notifier interface {
     "url": "https://example.com/article",
     "description": "記事の要約（最初の200文字）",
     "color": 5814783,
+    "thumbnail": {
+      "url": "https://example.com/image.jpg"
+    },
     "fields": [
       {
         "name": "フィード",
@@ -192,6 +196,8 @@ type Notifier interface {
   }]
 }
 ```
+
+**注記**: `thumbnail`フィールドはRSSフィードに画像がある場合のみ含まれます。
 
 ### 3.4 State Manager (`internal/state`)
 

@@ -50,6 +50,29 @@ GitHub ActionsとGo言語を使用して、RSSフィードを定期的に監視�
 7. **ディレクトリ構造の準備**
    - `state/.gitkeep`: 状態ファイル用ディレクトリ
 
+### ✅ 機能拡張（2025-11-13 追加実装）
+
+8. **サムネイル画像表示機能の実装**
+   - RSS記事に画像がある場合、Discord通知にサムネイル表示
+   - `pkg/models/article.go`: `ImageURL`フィールド追加
+   - `internal/feed/fetcher.go`: `extractImageURL()`メソッド実装
+     - `<image>`タグからの画像URL抽出
+     - `<enclosure type="image/*">`からの画像URL抽出
+   - `internal/discord/notifier.go`: Discord EmbedのThumbnail設定
+   - 画像がない記事でも正常動作（後方互換性維持）
+
+9. **フィードごとのチャンネル振り分け機能**
+   - 設定ファイルの`webhook_url`フィールドでフィード専用チャンネル指定可能
+   - 環境変数の展開に対応（`${DISCORD_WEBHOOK_URL_TECH}`形式）
+   - デフォルトWebhook URLへのフォールバック機能
+
+10. **ドキュメントの更新**
+    - `README.md`: サムネイル画像とチャンネル振り分け機能を特徴に追加
+    - `docs/requirements/requirements.md`: FR-007-1（サムネイル）、FR-009（チャンネル振り分け）追加
+    - `docs/requirements/architecture.md`: FeedConfigにWebhookURL追加、メッセージフォーマットにthumbnail追加
+    - `docs/adr/0003-discord-notification-format.md`: サムネイル画像を「実装済み」に更新
+    - `AGENTS.md`: 開発ワークフローとコミット前チェックリストを追加
+
 ## 設計のハイライト
 
 ### 採用技術
@@ -312,9 +335,9 @@ git push origin main
 
 - ✅ RSS フィード取得（並行処理）
 - ✅ Discord Webhook 通知（Embeds形式）
-- ✅ サムネイル画像表示
+- ✅ **サムネイル画像表示**（RSSから画像を自動抽出）
+- ✅ **フィードごとのチャンネル振り分け**（動的Webhook URL選択）
 - ✅ 状態管理（通知済み記事の追跡）
-- ✅ フィードごとのチャンネル指定（オプション）
 - ✅ カテゴリ別の色分け
 - ✅ 初回実行時の記事数制限
 - ✅ エラーハンドリングとリトライ
@@ -322,6 +345,7 @@ git push origin main
 - ✅ GitHub Actions統合（Cron実行）
 - ✅ CI/CD（テスト・Lint・ビルド）
 - ✅ Dependabot（自動依存関係更新）
+- ✅ **開発ワークフロー完備**（コミット前チェックリスト）
 
 ### コード品質
 

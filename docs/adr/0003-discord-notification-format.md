@@ -302,9 +302,9 @@ func (n *Notifier) SendArticles(ctx context.Context, articles []Article) error {
 - Embed総文字数: 最大6000文字
 - 1メッセージあたりのEmbeds: 最大10個
 
-## 将来的な拡張案
+## 実装された拡張機能
 
-### 1. サムネイル画像
+### 1. サムネイル画像 ✅ 実装済み（2025-11-13）
 記事にOGP画像がある場合、サムネイルとして表示：
 ```json
 "thumbnail": {
@@ -312,7 +312,21 @@ func (n *Notifier) SendArticles(ctx context.Context, articles []Article) error {
 }
 ```
 
-### 2. 著者情報
+**実装内容:**
+- RSSフィードの`<image>`タグから画像URLを自動抽出
+- `<enclosure type="image/*">`からも画像を取得
+- Discord EmbedのThumbnailフィールドに設定
+- 画像がない記事でもエラーにならず正常動作
+
+**実装ファイル:**
+- `pkg/models/article.go`: `ImageURL`フィールド追加
+- `internal/feed/fetcher.go`: `extractImageURL()`メソッド実装
+- `internal/discord/notifier.go`: Thumbnail設定ロジック追加
+
+## 将来的な拡張案
+
+### 1. 著者アイコン画像
+現在、著者名は表示されていますが、アイコン画像は未対応：
 ```json
 "author": {
   "name": "著者名",
@@ -320,7 +334,7 @@ func (n *Notifier) SendArticles(ctx context.Context, articles []Article) error {
 }
 ```
 
-### 3. カスタマイズ可能なテンプレート
+### 2. カスタマイズ可能なテンプレート
 設定ファイルでEmbed形式をカスタマイズ可能にする：
 ```yaml
 notification_template:
