@@ -1,9 +1,6 @@
 # golangci-lint configuration
 # https://golangci-lint.run/usage/configuration/
 
-# 設定ファイルのバージョン（golangci-lint v2.0以降で必須）
-version: 2
-
 run:
   # タイムアウト設定
   timeout: 5m
