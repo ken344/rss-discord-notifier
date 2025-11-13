@@ -120,6 +120,54 @@ feeds:
     webhook_url: "${DISCORD_WEBHOOK_URL_AWS}"
 
 
+  ############################################
+  # AI（OpenAI / Anthropic / Google / Meta / etc.）
+  ############################################
+
+  - name: "OpenAI Blog"
+    url: "https://openai.com/blog/rss/"
+    category: "AI"
+    enabled: true
+    webhook_url: "${DISCORD_WEBHOOK_URL_AI}"
+
+  - name: "Anthropic Blog"
+    url: "https://www.anthropic.com/news/feed"
+    category: "AI"
+    enabled: true
+    webhook_url: "${DISCORD_WEBHOOK_URL_AI}"
+
+  - name: "Google AI Blog"
+    url: "https://ai.googleblog.com/feeds/posts/default"
+    category: "AI"
+    enabled: true
+    webhook_url: "${DISCORD_WEBHOOK_URL_AI}"
+
+  - name: "Meta AI Research"
+    url: "https://ai.facebook.com/blog/rss/"
+    category: "AI"
+    enabled: true
+    # webhook_url: "${DISCORD_WEBHOOK_URL_AI}"
+
+  - name: "HuggingFace Blog"
+    url: "https://huggingface.co/blog/feed"
+    category: "AI"
+    enabled: true
+    webhook_url: "${DISCORD_WEBHOOK_URL_AI}"
+
+  # arXiv (AI)
+  - name: "arXiv Artificial Intelligence"
+    url: "https://export.arxiv.org/rss/cs.AI"
+    category: "AI"
+    enabled: false   # 記事が多いので初期はOFF推奨
+    webhook_url: "${DISCORD_WEBHOOK_URL_AI}"
+
+  # arXiv (Machine Learning)
+  - name: "arXiv Machine Learning"
+    url: "https://export.arxiv.org/rss/cs.LG"
+    category: "AI"
+    enabled: false
+    webhook_url: "${DISCORD_WEBHOOK_URL_AI}"
+
 # カテゴリ説明:
 # - Tech:  テクノロジー関連（色: Discord Blurple）
 # - News:  ニュース関連（色: Green）
