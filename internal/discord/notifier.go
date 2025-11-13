@@ -159,6 +159,13 @@ func (n *Notifier) createMessage(article *models.Article) *WebhookMessage {
 		}
 	}
 
+	// 画像URLがあればサムネイルとして追加
+	if article.ImageURL != "" {
+		embed.Thumbnail = &EmbedImage{
+			URL: article.ImageURL,
+		}
+	}
+
 	return &WebhookMessage{
 		Embeds: []Embed{embed},
 	}

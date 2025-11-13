@@ -188,6 +188,9 @@ func (f *Fetcher) convertToArticle(item *gofeed.Item, feedConfig *models.FeedCon
 		updatedAt = publishedAt
 	}
 
+	// 画像URL の取得
+	imageURL := f.extractImageURL(item)
+
 	return &models.Article{
 		ID:          id,
 		Title:       title,
@@ -201,7 +204,26 @@ func (f *Fetcher) convertToArticle(item *gofeed.Item, feedConfig *models.FeedCon
 		FeedURL:     feedConfig.URL,
 		Category:    feedConfig.Category,
 		WebhookURL:  feedConfig.WebhookURL, // フィード設定のWebhook URLを引き継ぐ
+		ImageURL:    imageURL,               // 記事の画像URL
 	}
+}
+
+// extractImageURL はRSSアイテムから画像URLを抽出する
+func (f *Fetcher) extractImageURL(item *gofeed.Item) string {
+	// 1. Item.Image フィールドから取得
+	if item.Image != nil && item.Image.URL != "" {
+		return item.Image.URL
+	}
+
+	// 2. Enclosures から画像を探す
+	for _, enc := range item.Enclosures {
+		if enc.Type != "" && strings.HasPrefix(enc.Type, "image/") {
+			return enc.URL
+		}
+	}
+
+	// 3. 画像が見つからない場合は空文字列
+	return ""
 }
 
 // stripHTML は、HTMLタグを簡易的に削除する
