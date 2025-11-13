@@ -41,11 +41,11 @@ jobs:
     steps:
       # 1. リポジトリをチェックアウト
       - name: リポジトリをチェックアウト
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       
       # 2. Go環境のセットアップ
       - name: Go環境をセットアップ
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v6
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
@@ -83,7 +83,7 @@ jobs:
       
       # 9. カバレッジレポートをアップロード（オプション）
       - name: カバレッジレポートをアップロード
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: always()
         with:
           name: coverage-report
@@ -130,17 +130,17 @@ jobs:
     
     steps:
       - name: リポジトリをチェックアウト
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       
       - name: Go環境をセットアップ
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v6
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
       
       # golangci-lintを使用（より包括的なLint）
       - name: golangci-lintを実行
-        uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action@v9
         with:
           version: latest
           # .golangci.ymlの設定を使用

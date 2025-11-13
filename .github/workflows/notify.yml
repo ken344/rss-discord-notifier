@@ -43,11 +43,11 @@ jobs:
     steps:
       # 1. リポジトリをチェックアウト
       - name: リポジトリをチェックアウト
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       
       # 2. Go環境のセットアップ
       - name: Go環境をセットアップ
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v6
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
@@ -69,7 +69,7 @@ jobs:
       # 5. 状態ファイルをArtifactsから復元（バックアップ）
       - name: 状態ファイルをArtifactsから復元（キャッシュミス時）
         if: steps.cache-state.outputs.cache-hit != 'true'
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v11
         continue-on-error: true
         with:
           name: rss-state
@@ -126,7 +126,7 @@ jobs:
       # 10. 状態ファイルをArtifactsにバックアップ
       - name: 状態ファイルをArtifactsにバックアップ
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: rss-state
           path: ${{ env.STATE_DIR }}/
