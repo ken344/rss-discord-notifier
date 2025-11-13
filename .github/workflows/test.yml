@@ -83,7 +83,7 @@ jobs:
       
       # 9. カバレッジレポートをアップロード（オプション）
       - name: カバレッジレポートをアップロード
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: coverage-report

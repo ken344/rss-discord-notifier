@@ -59,7 +59,7 @@ jobs:
       # 4. 状態ファイルをキャッシュから復元（メイン）
       - name: 状態ファイルをキャッシュから復元
         id: cache-state
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: ${{ env.STATE_DIR }}/
           key: rss-state-${{ github.run_number }}
@@ -118,7 +118,7 @@ jobs:
       # 9. 状態ファイルをキャッシュに保存
       - name: 状態ファイルをキャッシュに保存
         if: always()
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         with:
           path: ${{ env.STATE_DIR }}/
           key: rss-state-${{ github.run_number }}
@@ -126,7 +126,7 @@ jobs:
       # 10. 状態ファイルをArtifactsにバックアップ
       - name: 状態ファイルをArtifactsにバックアップ
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: rss-state
           path: ${{ env.STATE_DIR }}/
