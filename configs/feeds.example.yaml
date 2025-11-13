@@ -1,0 +1,84 @@
+# RSS Discord Notifier - フィード設定ファイル（サンプル）
+# このファイルを feeds.yaml にコピーして使用してください
+
+version: "1.0"
+
+# 通知設定
+notification:
+  # 1回の実行で通知する最大記事数（過負荷防止）
+  max_articles_per_run: 10
+  
+  # RSSフィード取得時のタイムアウト（秒）
+  timeout_seconds: 30
+  
+  # Discord通知間隔（ミリ秒）- レート制限対策
+  rate_limit_ms: 1000
+
+# 監視するRSSフィードのリスト
+feeds:
+  # Go公式ブログ
+  - name: "Go Blog"
+    url: "https://go.dev/blog/feed.atom"
+    category: "Tech"
+    enabled: true
+
+  # GitHub公式ブログ
+  - name: "GitHub Blog"
+    url: "https://github.blog/feed/"
+    category: "Tech"
+    enabled: true
+
+  # Hacker News
+  - name: "Hacker News"
+    url: "https://news.ycombinator.com/rss"
+    category: "Tech"
+    enabled: false  # 必要に応じて有効化
+
+  # サンプル（自分のフィードに置き換えてください）
+  - name: "My Favorite Blog"
+    url: "https://example.com/feed.xml"
+    category: "Blog"
+    enabled: false
+
+  # 複数のカテゴリ例
+  - name: "Tech News Site"
+    url: "https://example.com/tech/feed"
+    category: "News"
+    enabled: false
+
+  - name: "Personal Blog"
+    url: "https://example.com/blog/rss"
+    category: "Other"
+    enabled: false
+
+# カテゴリ説明:
+# - Tech:  テクノロジー関連（色: Discord Blurple）
+# - News:  ニュース関連（色: Green）
+# - Blog:  個人ブログなど（色: Yellow）
+# - Other: その他（色: Pink）
+
+# 使い方:
+# 1. このファイルを feeds.yaml にコピー
+#    cp configs/feeds.example.yaml configs/feeds.yaml
+#
+# 2. 監視したいRSSフィードを追加/編集
+#
+# 3. enabled を true に設定して有効化
+#
+# 4. 変更をコミットしてプッシュ
+#    git add configs/feeds.yaml
+#    git commit -m "Add RSS feeds"
+#    git push
+#
+# 5. 次回のGitHub Actions実行時から反映されます
+
+# ヒント:
+# - RSSフィードURLの見つけ方:
+#   - ブログのフッターやサイドバーに「RSS」アイコンを探す
+#   - `/feed`, `/rss`, `/feed.xml`, `/atom.xml` などのURLを試す
+#   - ブラウザの開発者ツールで <link type="application/rss+xml"> を探す
+#
+# - フィードが正しいか確認:
+#   - ブラウザでURLを開いてXMLが表示されるか確認
+#   - https://validator.w3.org/feed/ で検証
+

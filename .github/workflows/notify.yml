@@ -1,0 +1,168 @@
+name: RSS to Discord Notification
+
+# トリガー設定
+on:
+  # Cronスケジュールで定期実行
+  schedule:
+    # 毎時0分に実行（UTC時刻）
+    # 例: 日本時間で毎時9分頃（UTCは約9分遅延する可能性があります）
+    - cron: '0 * * * *'
+    
+    # 他のスケジュール例（必要に応じてコメントアウトを外して使用）:
+    # - cron: '*/30 * * * *'      # 30分ごと
+    # - cron: '0 */2 * * *'       # 2時間ごと
+    # - cron: '0 9,12,15,18 * * *' # 9時、12時、15時、18時（UTC）
+  
+  # 手動実行を許可
+  workflow_dispatch:
+    inputs:
+      log_level:
+        description: 'ログレベル'
+        required: false
+        default: 'INFO'
+        type: choice
+        options:
+          - DEBUG
+          - INFO
+          - WARN
+          - ERROR
+
+# 環境変数（ジョブ全体で使用）
+env:
+  GO_VERSION: '1.21'
+  STATE_DIR: 'state'
+
+jobs:
+  notify:
+    name: RSS記事をDiscordに通知
+    runs-on: ubuntu-latest
+    
+    # タイムアウト設定（10分）
+    timeout-minutes: 10
+    
+    steps:
+      # 1. リポジトリをチェックアウト
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+      
+      # 2. Go環境のセットアップ
+      - name: Go環境をセットアップ
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+      
+      # 3. 依存関係のダウンロード
+      - name: Go依存関係をダウンロード
+        run: go mod download
+      
+      # 4. 状態ファイルをキャッシュから復元（メイン）
+      - name: 状態ファイルをキャッシュから復元
+        id: cache-state
+        uses: actions/cache/restore@v3
+        with:
+          path: ${{ env.STATE_DIR }}/
+          key: rss-state-${{ github.run_number }}
+          restore-keys: |
+            rss-state-
+      
+      # 5. 状態ファイルをArtifactsから復元（バックアップ）
+      - name: 状態ファイルをArtifactsから復元（キャッシュミス時）
+        if: steps.cache-state.outputs.cache-hit != 'true'
+        uses: dawidd6/action-download-artifact@v2
+        continue-on-error: true
+        with:
+          name: rss-state
+          path: ${{ env.STATE_DIR }}/
+          workflow_conclusion: success
+          if_no_artifact_found: ignore
+      
+      # 6. 状態ディレクトリの作成（存在しない場合）
+      - name: 状態ディレクトリを作成
+        run: mkdir -p ${{ env.STATE_DIR }}
+      
+      # 7. RSS Discord Notifierを実行
+      - name: RSS Discord Notifierを実行
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          LOG_LEVEL: ${{ inputs.log_level || 'INFO' }}
+          LOG_FORMAT: 'json'
+          CONFIG_FILE_PATH: './configs/feeds.yaml'
+          STATE_FILE_PATH: './state/state.json'
+        run: |
+          echo "🚀 RSS Discord Notifierを起動..."
+          go run cmd/notifier/main.go
+          echo "✅ 実行完了"
+      
+      # 8. 実行結果のサマリーを表示
+      - name: 実行結果をサマリー表示
+        if: always()
+        run: |
+          echo "## 📊 実行結果" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **実行日時**: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "- **Workflow**: ${{ github.workflow }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Run ID**: ${{ github.run_id }}" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -f "state/state.json" ]; then
+            echo "- **状態ファイル**: 存在" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### 状態ファイル情報" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`json" >> $GITHUB_STEP_SUMMARY
+            cat state/state.json | head -20 >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- **状態ファイル**: 未作成（初回実行の可能性）" >> $GITHUB_STEP_SUMMARY
+          fi
+      
+      # 9. 状態ファイルをキャッシュに保存
+      - name: 状態ファイルをキャッシュに保存
+        if: always()
+        uses: actions/cache/save@v3
+        with:
+          path: ${{ env.STATE_DIR }}/
+          key: rss-state-${{ github.run_number }}
+      
+      # 10. 状態ファイルをArtifactsにバックアップ
+      - name: 状態ファイルをArtifactsにバックアップ
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: rss-state
+          path: ${{ env.STATE_DIR }}/
+          retention-days: 30
+          if-no-files-found: ignore
+      
+      # 11. エラー時の通知（オプション）
+      - name: エラー通知
+        if: failure() && secrets.DISCORD_WEBHOOK_URL != ''
+        continue-on-error: true
+        run: |
+          curl -X POST "${{ secrets.DISCORD_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "embeds": [{
+                "title": "⚠️ RSS Discord Notifier エラー",
+                "description": "Workflowの実行中にエラーが発生しました。",
+                "color": 15158332,
+                "fields": [
+                  {
+                    "name": "Repository",
+                    "value": "${{ github.repository }}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Workflow",
+                    "value": "${{ github.workflow }}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Run ID",
+                    "value": "[${{ github.run_id }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})",
+                    "inline": true
+                  }
+                ],
+                "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%S.000Z)'"
+              }]
+            }'
+
