@@ -46,6 +46,9 @@ jobs:
       DISCORD_WEBHOOK_URL_TECH: ${{ secrets.DISCORD_WEBHOOK_URL_TECH }}
       DISCORD_WEBHOOK_URL_NEWS: ${{ secrets.DISCORD_WEBHOOK_URL_NEWS }}
       DISCORD_WEBHOOK_URL_BLOG: ${{ secrets.DISCORD_WEBHOOK_URL_BLOG }}
+      DISCORD_WEBHOOK_URL_AWS: ${{ secrets.DISCORD_WEBHOOK_URL_AWS }}
+      DISCORD_WEBHOOK_URL_CNCF: ${{ secrets.DISCORD_WEBHOOK_URL_CNCF }}
+      DISCORD_WEBHOOK_URL_AI: ${{ secrets.DISCORD_WEBHOOK_URL_AI }}
     
     steps:
       # 1. リポジトリをチェックアウト
@@ -95,6 +98,9 @@ jobs:
           DISCORD_WEBHOOK_URL_TECH: ${{ secrets.DISCORD_WEBHOOK_URL_TECH }}
           DISCORD_WEBHOOK_URL_NEWS: ${{ secrets.DISCORD_WEBHOOK_URL_NEWS }}
           DISCORD_WEBHOOK_URL_BLOG: ${{ secrets.DISCORD_WEBHOOK_URL_BLOG }}
+          DISCORD_WEBHOOK_URL_AWS: ${{ secrets.DISCORD_WEBHOOK_URL_AWS }}
+          DISCORD_WEBHOOK_URL_CNCF: ${{ secrets.DISCORD_WEBHOOK_URL_CNCF }}
+          DISCORD_WEBHOOK_URL_AI: ${{ secrets.DISCORD_WEBHOOK_URL_AI }}
           LOG_LEVEL: ${{ inputs.log_level || 'INFO' }}
           LOG_FORMAT: 'json'
           CONFIG_FILE_PATH: './configs/feeds.yaml'
