@@ -219,7 +219,10 @@ func (n *Notifier) send(ctx context.Context, message *WebhookMessage) error {
 	defer resp.Body.Close()
 
 	// レスポンスボディを読み取り
-	body, _ := io.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return fmt.Errorf("failed to read response body: %w", err)
+	}
 
 	// ステータスコードをチェック
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {

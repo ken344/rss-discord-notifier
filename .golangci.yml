@@ -92,8 +92,9 @@ output:
   # カラー出力
   color: always
   
-  # フォーマット
-  format: colored-line-number
+  # フォーマット（複数指定可能）
+  formats:
+    - format: colored-line-number
   
   # 結果の並び替え
   sort-results: true
