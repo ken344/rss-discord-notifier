@@ -264,6 +264,38 @@ go test -v ./...
 - [gofeed](https://github.com/mmcdole/gofeed) - RSSパーサー
 - [yaml.v3](https://gopkg.in/yaml.v3) - YAML解析
 
+### 依存関係の自動更新
+
+このプロジェクトは **Dependabot** を使用して依存関係を自動的に更新します。
+
+#### 設定内容
+
+- **Go modules**: 毎週月曜日に更新をチェック
+- **GitHub Actions**: 毎週月曜日に更新をチェック
+- **自動PR作成**: 更新があれば自動的にPull Requestを作成
+- **グループ化**: パッチ/マイナーバージョンは1つのPRにまとめられます
+
+#### Dependabotの動作
+
+1. 毎週月曜日18:00（日本時間）に依存関係をチェック
+2. 更新があればPull Requestを自動作成
+3. CIテストが自動実行される
+4. テストが成功したらマージ可能
+
+#### 手動での依存関係更新
+
+```bash
+# 依存関係を最新化
+go get -u ./...
+go mod tidy
+
+# テストを実行
+make test
+
+# 問題なければコミット
+git commit -am "chore(deps): Update dependencies"
+```
+
 ## 🏗️ アーキテクチャ
 
 詳細なアーキテクチャ設計は以下のドキュメントを参照してください：

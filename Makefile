@@ -160,6 +160,24 @@ build-windows: ## Windows用にビルド
 deps: ## 依存関係を表示
 	@$(GO) list -m all
 
+.PHONY: deps-update
+deps-update: ## 依存関係を最新化
+	@echo "$(COLOR_BLUE)Updating dependencies...$(COLOR_RESET)"
+	@$(GO) get -u ./...
+	@$(GO) mod tidy
+	@echo "$(COLOR_GREEN)✓ Dependencies updated$(COLOR_RESET)"
+	@echo "$(COLOR_YELLOW)⚠ Please run 'make test' to verify$(COLOR_RESET)"
+
+.PHONY: deps-check
+deps-check: ## 依存関係の更新をチェック
+	@echo "$(COLOR_BLUE)Checking for dependency updates...$(COLOR_RESET)"
+	@$(GO) list -u -m all | grep '\['
+
+.PHONY: deps-graph
+deps-graph: ## 依存関係のグラフを表示
+	@echo "$(COLOR_BLUE)Dependency graph:$(COLOR_RESET)"
+	@$(GO) mod graph
+
 .PHONY: check
 check: fmt vet lint test ## すべてのチェックを実行（ビルドなし）
 

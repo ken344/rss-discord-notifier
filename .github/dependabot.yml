@@ -1,0 +1,70 @@
+# Dependabot設定
+# https://docs.github.com/ja/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  # Go modules の依存関係を更新
+  - package-ecosystem: "gomod"
+    directory: "/"
+    schedule:
+      # 毎週月曜日の9:00 (UTC) = 日本時間18:00にチェック
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Tokyo"
+    # Pull Requestの設定
+    open-pull-requests-limit: 5
+    # ラベルを自動付与
+    labels:
+      - "dependencies"
+      - "go"
+    # コミットメッセージのプレフィックス
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    # グループ化設定（マイナーアップデートをまとめる）
+    groups:
+      # パッチバージョンを1つのPRにまとめる
+      patch-updates:
+        patterns:
+          - "*"
+        update-types:
+          - "patch"
+      # マイナーバージョンを1つのPRにまとめる
+      minor-updates:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+    # レビュアーを自動アサイン（必要に応じて変更）
+    # reviewers:
+    #   - "ken344"
+    # アサイニーを自動設定（必要に応じて変更）
+    # assignees:
+    #   - "ken344"
+
+  # GitHub Actions の依存関係を更新
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      # 毎週月曜日の9:00 (UTC) = 日本時間18:00にチェック
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Tokyo"
+    # Pull Requestの設定
+    open-pull-requests-limit: 3
+    # ラベルを自動付与
+    labels:
+      - "dependencies"
+      - "github-actions"
+    # コミットメッセージのプレフィックス
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    # グループ化（すべてのGitHub Actionsを1つのPRにまとめる）
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
