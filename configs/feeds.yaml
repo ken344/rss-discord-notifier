@@ -37,25 +37,58 @@ feeds:
     enabled: false  # 必要に応じて有効化
     # webhook_url: "${DISCORD_WEBHOOK_URL_TECH}"  # Tech専用チャンネル（オプション）
 
-  # サンプル（自分のフィードに置き換えてください）
-  - name: "My Favorite Blog"
-    url: "https://example.com/feed.xml"
-    category: "Blog"
-    enabled: false
-    # webhook_url: "${DISCORD_WEBHOOK_URL_BLOG}"  # Blog専用チャンネル（オプション）
+############################################
+# Kubernetes / CNCF / Cloud Native
+############################################
 
-  # 複数のカテゴリ例
-  - name: "Tech News Site"
-    url: "https://example.com/tech/feed"
-    category: "News"
-    enabled: false
-    # webhook_url: "${DISCORD_WEBHOOK_URL_NEWS}"  # News専用チャンネル（オプション）
+# Kubernetes公式ブログ
+  - name: "Kubernetes Blog"
+    url: "https://kubernetes.io/feed.xml"
+    category: "CNCF"
+    enabled: true
+    # webhook_url: "${DISCORD_WEBHOOK_URL_CNCF}"
 
-  - name: "Personal Blog"
-    url: "https://example.com/blog/rss"
-    category: "Other"
-    enabled: false
-    # webhook_urlなし → デフォルトのDISCORD_WEBHOOK_URLを使用
+# Kubernetes Release Blog
+  - name: "Kubernetes Release Blog"
+    url: "https://kubernetes.io/feed.xml?category=release"
+    category: "CNCF"
+    enabled: true
+    # webhook_url: "${DISCORD_WEBHOOK_URL_CNCF}"
+
+  # CNCF Blog
+  - name: "CNCF Blog"
+    url: "https://www.cncf.io/feed/"
+    category: "CNCF"
+    enabled: true
+    # webhook_url: "${DISCORD_WEBHOOK_URL_CNCF}"
+
+  # CNCF Announcements
+  - name: "CNCF Announcements"
+    url: "https://www.cncf.io/announcements/feed/"
+    category: "CNCF"
+    enabled: true
+    # webhook_url: "${DISCORD_WEBHOOK_URL_CNCF}"
+
+  # Argo Project Blog
+  - name: "Argo Project Blog"
+    url: "https://blog.argoproj.io/feed"
+    category: "CNCF"
+    enabled: true
+    # webhook_url: "${DISCORD_WEBHOOK_URL_CNCF}"
+
+  # Container Solutions Blog
+  - name: "Container Solutions Blog"
+    url: "https://blog.container-solutions.com/rss.xml"
+    category: "CNCF"
+    enabled: true
+    # webhook_url: "${DISCORD_WEBHOOK_URL_CNCF}"
+
+  # Weaveworks Blog
+  - name: "Weaveworks Blog"
+    url: "https://www.weave.works/feed.xml"
+    category: "CNCF"
+    enabled: true
+    # webhook_url: "${DISCORD_WEBHOOK_URL_CNCF}"
 
 # カテゴリ説明:
 # - Tech:  テクノロジー関連（色: Discord Blurple）
