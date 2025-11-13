@@ -40,6 +40,13 @@ jobs:
     # タイムアウト設定（10分）
     timeout-minutes: 10
     
+    # ジョブレベルの環境変数
+    env:
+      DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      DISCORD_WEBHOOK_URL_TECH: ${{ secrets.DISCORD_WEBHOOK_URL_TECH }}
+      DISCORD_WEBHOOK_URL_NEWS: ${{ secrets.DISCORD_WEBHOOK_URL_NEWS }}
+      DISCORD_WEBHOOK_URL_BLOG: ${{ secrets.DISCORD_WEBHOOK_URL_BLOG }}
+    
     steps:
       # 1. リポジトリをチェックアウト
       - name: リポジトリをチェックアウト
@@ -85,6 +92,9 @@ jobs:
       - name: RSS Discord Notifierを実行
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_WEBHOOK_URL_TECH: ${{ secrets.DISCORD_WEBHOOK_URL_TECH }}
+          DISCORD_WEBHOOK_URL_NEWS: ${{ secrets.DISCORD_WEBHOOK_URL_NEWS }}
+          DISCORD_WEBHOOK_URL_BLOG: ${{ secrets.DISCORD_WEBHOOK_URL_BLOG }}
           LOG_LEVEL: ${{ inputs.log_level || 'INFO' }}
           LOG_FORMAT: 'json'
           CONFIG_FILE_PATH: './configs/feeds.yaml'
@@ -135,10 +145,10 @@ jobs:
       
       # 11. エラー時の通知（オプション）
       - name: エラー通知
-        if: failure() && secrets.DISCORD_WEBHOOK_URL != ''
+        if: failure() && env.DISCORD_WEBHOOK_URL != ''
         continue-on-error: true
         run: |
-          curl -X POST "${{ secrets.DISCORD_WEBHOOK_URL }}" \
+          curl -X POST "${{ env.DISCORD_WEBHOOK_URL }}" \
             -H "Content-Type: application/json" \
             -d '{
               "embeds": [{
