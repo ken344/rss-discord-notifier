@@ -371,16 +371,6 @@ GitHub Actions のログを確認：
 LOG_LEVEL=DEBUG go run cmd/notifier/main.go
 ```
 
-## 🤝 コントリビューション
-
-プルリクエストを歓迎します！
-
-1. このリポジトリをFork
-2. Feature ブランチを作成 (`git checkout -b feature/amazing-feature`)
-3. 変更をコミット (`git commit -m 'Add some amazing feature'`)
-4. ブランチをプッシュ (`git push origin feature/amazing-feature`)
-5. プルリクエストを作成
-
 ### コーディングガイドライン
 
 - Go 標準のコーディングスタイルに従う
@@ -398,14 +388,7 @@ MIT License - 詳細は [LICENSE](LICENSE) ファイルを参照してくださ�
 - [Discord](https://discord.com/) - Webhook APIの提供
 - [GitHub Actions](https://github.com/features/actions) - 無料のCI/CDプラットフォーム
 
-## 📞 サポート
-
-問題が発生した場合：
-
-1. [Issues](https://github.com/yourusername/rss-discord-notifier/issues)で既存の問題を検索
-2. 新しいIssueを作成（再現手順、ログ、環境情報を含めてください）
-
 ---
 
-**作成者**: [Your Name](https://github.com/yourusername)  
+**作成者**: [Your Name](https://github.com/ken344)  
 **プロジェクトリンク**: [https://github.com/yourusername/rss-discord-notifier](https://github.com/yourusername/rss-discord-notifier)
